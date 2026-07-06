@@ -1,0 +1,78 @@
+import type { PassiveDef } from './types';
+
+export const PASSIVES: Record<string, PassiveDef> = {
+  four_leaf: {
+    id: 'four_leaf',
+    name: 'Four-Leaf Chip',
+    icon: '🍀',
+    description: 'Increases luck, improving item odds and slot outcomes.',
+    maxLevel: 5,
+    stat: 'luck',
+    perLevel: 8,
+  },
+  loaded_dice: {
+    id: 'loaded_dice',
+    name: 'Loaded Dice',
+    icon: '🎲',
+    description: 'Increases might: more damage from every weapon.',
+    maxLevel: 5,
+    stat: 'might',
+    perLevel: 10,
+  },
+  velvet_gloves: {
+    id: 'velvet_gloves',
+    name: 'Velvet Gloves',
+    icon: '🧤',
+    description: 'Increases movement speed.',
+    maxLevel: 5,
+    stat: 'speed',
+    perLevel: 6,
+  },
+  vip_pass: {
+    id: 'vip_pass',
+    name: 'VIP Pass',
+    icon: '🎫',
+    description: 'Increases max HP.',
+    maxLevel: 5,
+    stat: 'maxHp',
+    perLevel: 20,
+  },
+  house_edge: {
+    id: 'house_edge',
+    name: 'House Edge',
+    icon: '🏠',
+    description: 'Increases armor, reducing all incoming damage.',
+    maxLevel: 5,
+    stat: 'armor',
+    perLevel: 2,
+  },
+  lucky_horseshoe: {
+    id: 'lucky_horseshoe',
+    name: 'Lucky Horseshoe',
+    icon: '🧲',
+    description: 'Increases pickup magnet range.',
+    maxLevel: 5,
+    stat: 'pickupRange',
+    perLevel: 24,
+  },
+  card_counter: {
+    id: 'card_counter',
+    name: 'Card Counter',
+    icon: '🧮',
+    description: 'Reduces all weapon cooldowns.',
+    maxLevel: 5,
+    stat: 'cooldownReduction',
+    perLevel: 6,
+  },
+  high_roller: {
+    id: 'high_roller',
+    name: "High Roller's Ring",
+    icon: '💍',
+    description: 'Slowly regenerates HP over time.',
+    maxLevel: 5,
+    stat: 'regen',
+    perLevel: 0.4,
+  },
+};
+
+export const PASSIVE_LIST = Object.values(PASSIVES);

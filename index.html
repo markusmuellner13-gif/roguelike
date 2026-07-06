@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#0d0818" />
+    <meta name="description" content="Glimmerbonk — a slot-machine-themed roguelite survivor game. Spin the reels, stack your build, and survive the House." />
+    <meta name="color-scheme" content="dark" />
+
+    <meta property="og:title" content="Glimmerbonk" />
+    <meta property="og:description" content="Spin the reels. Stack your build. Survive the House. A free browser roguelite." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icons/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <title>Glimmerbonk — Spin. Loot. Survive.</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Boot / loading -->
+      <section id="screen-boot" class="screen screen--boot" aria-live="polite">
+        <div class="boot-logo">
+          <span class="boot-logo__glyph">🎰</span>
+          <h1 class="boot-logo__title">GLIMMER<span>BONK</span></h1>
+        </div>
+        <div class="boot-bar"><div class="boot-bar__fill" id="boot-bar-fill"></div></div>
+        <p class="boot-hint" id="boot-hint">Loading the House…</p>
+        <button class="btn btn--primary btn--lg" id="btn-boot-start" hidden>Tap to Enter</button>
+      </section>
+
+      <!-- Gameplay canvas + HUD -->
+      <canvas id="game-canvas" aria-hidden="true"></canvas>
+      <div id="touch-layer" aria-hidden="true"></div>
+      <div id="joystick-base" class="joystick-base"><div id="joystick-thumb" class="joystick-thumb"></div></div>
+
+      <div id="hud" class="hud" hidden>
+        <div class="hud__top">
+          <div class="hud__stat hud__stat--hp">
+            <div class="bar bar--hp"><div class="bar__fill" id="hp-fill"></div></div>
+            <span class="hud__label" id="hp-label">100/100</span>
+          </div>
+          <div class="hud__center">
+            <span class="hud__timer" id="hud-timer">00:00</span>
+            <span class="hud__stage" id="hud-stage">The Casino Floor</span>
+          </div>
+          <button class="btn-icon" id="btn-pause" aria-label="Pause">⏸</button>
+        </div>
+        <div class="hud__xp"><div class="bar bar--xp"><div class="bar__fill" id="xp-fill"></div></div></div>
+        <div class="hud__bottom">
+          <div class="hud__chip hud__chip--level">Lv <span id="hud-level">1</span></div>
+          <div class="hud__weapons" id="hud-weapons"></div>
+          <div class="hud__chip hud__chip--kills">💀 <span id="hud-kills">0</span></div>
+          <div class="hud__chip hud__chip--chips">🪙 <span id="hud-chips">0</span></div>
+        </div>
+      </div>
+
+      <!-- Main menu -->
+      <section id="screen-menu" class="screen" hidden>
+        <div class="menu-glow"></div>
+        <div class="menu-card">
+          <h1 class="logo logo--menu">GLIMMER<span>BONK</span></h1>
+          <p class="tagline">Spin the reels. Stack your build. Survive the House.</p>
+          <nav class="menu-actions">
+            <button class="btn btn--primary btn--lg" id="btn-play">▶ Play</button>
+            <button class="btn btn--secondary" id="btn-daily">🌟 Daily Run</button>
+            <button class="btn btn--secondary" id="btn-hub">🏦 The Hub</button>
+          </nav>
+          <div class="menu-footer">
+            <button class="btn-chip" id="btn-open-profile">👤 <span id="menu-profile-name">Player</span></button>
+            <span class="btn-chip">🪙 <span id="menu-chips">0</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Character + stage select -->
+      <section id="screen-select" class="screen" hidden>
+        <header class="screen-header">
+          <button class="btn-icon" data-back>←</button>
+          <h2>Choose Your Gambler</h2>
+        </header>
+        <div class="char-grid" id="char-grid"></div>
+        <h3 class="section-title">Stage</h3>
+        <div class="stage-grid" id="stage-grid"></div>
+        <button class="btn btn--primary btn--lg btn--float" id="btn-start-run">Enter the Casino →</button>
+      </section>
+
+      <!-- Hub: upgrades / achievements / leaderboard / profile / settings -->
+      <section id="screen-hub" class="screen" hidden>
+        <header class="screen-header">
+          <button class="btn-icon" data-back>←</button>
+          <h2>The Hub</h2>
+        </header>
+        <div class="tabs" id="hub-tabs">
+          <button class="tab active" data-tab="upgrades">Upgrades</button>
+          <button class="tab" data-tab="achievements">Achievements</button>
+          <button class="tab" data-tab="leaderboard">Leaderboard</button>
+          <button class="tab" data-tab="profile">Profile</button>
+          <button class="tab" data-tab="settings">Settings</button>
+        </div>
+
+        <div class="tab-panel" data-panel="upgrades">
+          <div class="hub-wallet">🪙 <span id="hub-chips">0</span> Chips</div>
+          <div class="upgrade-grid" id="upgrade-grid"></div>
+        </div>
+
+        <div class="tab-panel" data-panel="achievements" hidden>
+          <div class="achievement-list" id="achievement-list"></div>
+        </div>
+
+        <div class="tab-panel" data-panel="leaderboard" hidden>
+          <div class="leaderboard-tabs">
+            <button class="tab active" data-lb="global">🌐 Global</button>
+            <button class="tab" data-lb="local">💾 Personal Bests</button>
+          </div>
+          <div class="leaderboard-list" id="leaderboard-list">
+            <p class="muted" id="leaderboard-status">Loading…</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="profile" hidden>
+          <div class="profile-card">
+            <input class="profile-name-input" id="profile-name-input" maxlength="16" placeholder="Your name" />
+            <div class="profile-icon-picker" id="profile-icon-picker"></div>
+          </div>
+          <div class="stat-grid" id="profile-stats"></div>
+        </div>
+
+        <div class="tab-panel" data-panel="settings" hidden>
+          <div class="settings-list">
+            <label class="settings-row">Music Volume
+              <input type="range" min="0" max="100" id="setting-music" />
+            </label>
+            <label class="settings-row">SFX Volume
+              <input type="range" min="0" max="100" id="setting-sfx" />
+            </label>
+            <label class="settings-row">Screen Shake
+              <input type="checkbox" id="setting-shake" />
+            </label>
+            <label class="settings-row">Damage Numbers
+              <input type="checkbox" id="setting-dmg" />
+            </label>
+            <label class="settings-row">Reduced Motion
+              <input type="checkbox" id="setting-motion" />
+            </label>
+            <label class="settings-row">Colorblind-Friendly Palette
+              <input type="checkbox" id="setting-cb" />
+            </label>
+          </div>
+          <button class="btn btn--danger" id="btn-reset-save">Reset Save Data</button>
+        </div>
+      </section>
+
+      <!-- Pause -->
+      <section id="screen-pause" class="screen screen--overlay" hidden>
+        <div class="modal-card">
+          <h2>Paused</h2>
+          <div class="menu-actions">
+            <button class="btn btn--primary" id="btn-resume">▶ Resume</button>
+            <button class="btn btn--secondary" id="btn-pause-settings">⚙ Settings</button>
+            <button class="btn btn--secondary" id="btn-quit-run">🚪 Quit to Menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Level up / slot machine -->
+      <section id="screen-levelup" class="screen screen--overlay" hidden>
+        <div class="modal-card modal-card--slot">
+          <h2 id="levelup-title">LEVEL UP!</h2>
+          <div class="slot-machine" id="slot-machine">
+            <div class="slot-reel" data-reel="0"><div class="slot-reel__strip"></div></div>
+            <div class="slot-reel" data-reel="1"><div class="slot-reel__strip"></div></div>
+            <div class="slot-reel" data-reel="2"><div class="slot-reel__strip"></div></div>
+          </div>
+          <div class="slot-choices" id="slot-choices" hidden></div>
+        </div>
+      </section>
+
+      <!-- Game over -->
+      <section id="screen-gameover" class="screen screen--overlay" hidden>
+        <div class="modal-card">
+          <h2 id="result-title">You Went Bust</h2>
+          <p class="tagline" id="result-subtitle"></p>
+          <div class="result-stats" id="result-stats"></div>
+          <div class="menu-actions">
+            <button class="btn btn--primary" id="btn-share">📤 Share Result</button>
+            <button class="btn btn--secondary" id="btn-retry">↻ Retry</button>
+            <button class="btn btn--secondary" id="btn-result-menu">🏠 Main Menu</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="toast" id="toast" hidden></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
