@@ -83,24 +83,22 @@ export class Renderer {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Parallax grid tied to world position for a sense of motion/depth.
+    // Parallax floor dots tied to world position for a sense of motion/depth.
+    // Deliberately dots, not full-width lines — a stray line here reads as
+    // a stray UI bar (it was getting confused for the XP bar in playtests).
     const gridSize = 64;
     const offX = ((-cam.x * 0.5) % gridSize) + gridSize;
     const offY = ((-cam.y * 0.5) % gridSize) + gridSize;
-    ctx.strokeStyle = stage.accentColor + '14';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
+    ctx.fillStyle = stage.accentColor + '33';
     for (let x = -gridSize; x < w + gridSize; x += gridSize) {
       const gx = x + (offX % gridSize);
-      ctx.moveTo(gx, 0);
-      ctx.lineTo(gx, h);
+      for (let y = -gridSize; y < h + gridSize; y += gridSize) {
+        const gy = y + (offY % gridSize);
+        ctx.beginPath();
+        ctx.arc(gx, gy, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    for (let y = -gridSize; y < h + gridSize; y += gridSize) {
-      const gy = y + (offY % gridSize);
-      ctx.moveTo(0, gy);
-      ctx.lineTo(w, gy);
-    }
-    ctx.stroke();
 
     // Slow drifting glow orbs for casino ambience.
     for (let i = 0; i < 5; i++) {

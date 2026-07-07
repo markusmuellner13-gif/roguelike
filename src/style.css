@@ -417,7 +417,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); letter-spacing: 0.02em
   padding: calc(12px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 .hud[hidden] { display: none; }
 .hud__top { display: flex; align-items: center; gap: 12px; pointer-events: auto; }
@@ -431,7 +430,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); letter-spacing: 0.02em
 .hud__timer { font-family: var(--font-display); font-size: 22px; color: var(--gold); text-shadow: 0 2px 8px #000; }
 .hud__stage { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
 .hud__xp { margin-top: 8px; }
-.hud__bottom { display: flex; align-items: center; gap: 8px; pointer-events: auto; }
+.hud__bottom { display: flex; align-items: center; gap: 8px; pointer-events: auto; margin-top: auto; }
 .hud__chip {
   padding: 6px 10px;
   border-radius: 999px;

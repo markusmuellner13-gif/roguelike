@@ -82,11 +82,11 @@ export class GameOverScreen {
     const s = this.lastSummary;
     if (!s) return;
     this.audio.uiClick();
-    const text = `I survived ${formatTime(s.survivedSec)} in GLIMMERBONK and hit Level ${s.level} 🎰🔥 Beat that:`;
+    const text = `I survived ${formatTime(s.survivedSec)} in REELBONK and hit Level ${s.level} 🎰🔥 Beat that:`;
     const url = location.origin;
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Glimmerbonk', text, url });
+        await navigator.share({ title: 'Reelbonk', text, url });
       } else {
         await navigator.clipboard.writeText(`${text} ${url}`);
         showToast('Copied to clipboard!');

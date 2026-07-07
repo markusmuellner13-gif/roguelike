@@ -3,7 +3,7 @@
  * and silent fallback to an in-memory map when storage is unavailable
  * (privacy mode, embedded webviews, quota exceeded).
  */
-const NAMESPACE = 'glimmerbonk';
+const NAMESPACE = 'reelbonk';
 const memoryFallback = new Map<string, string>();
 let storageOk = true;
 
